@@ -1,11 +1,3 @@
-<!--
-Scneario Name : 전방차량추종
-Entities : ADS, adversary
-시나리오 설명 :
-    1. 스폰 위치 : ADS 전방 500m adversary 스폰
-    2. adversary 차량 속도 약 30km/h로 주행 시작
-    3. ADS는 Scenario가 아닌 자율주행으로 주행
- -->
 <?xml version="1.0"?>
 <OpenSCENARIO>
   <FileHeader revMajor="1" revMinor="0" date="2020-03-24T12:00:00" description="CARLA-AUTOWARE:FollowingFrontCar" author="leeseho"/>
@@ -278,4 +270,3 @@ Entities : ADS, adversary
     <StopTrigger/>
   </Storyboard>
 </OpenSCENARIO>
-
