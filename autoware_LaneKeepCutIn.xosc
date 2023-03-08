@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <OpenSCENARIO>
-  <FileHeader revMajor="1" revMinor="0" date="2020-03-24T12:00:00" description="CARLA-AUTOWARE:FollowingFrontCar" author="leeseho"/>
+  <FileHeader revMajor="1" revMinor="0" date="2020-03-24T12:00:00" description="CARLA:LaneChangeCutIn" author=""/>
   <ParameterDeclarations/>
   <CatalogLocations/>
   <RoadNetwork>
@@ -9,7 +9,7 @@
   </RoadNetwork>
   <Entities>
     <ScenarioObject name="hero">
-      <Vehicle name="vehicle.tesla.model3" vehicleCategory="car">
+      <Vehicle name="vehicle.mercedes.coupe_2020" vehicleCategory="car">
         <ParameterDeclarations/>
         <Performance maxSpeed="150" maxAcceleration="200" maxDeceleration="10.0"/>
         <BoundingBox>
@@ -60,7 +60,7 @@
           </EnvironmentAction>
         </GlobalAction>
         <Private entityRef="hero">
-          <PrivateAction> <!--초기 스폰 위치-->
+          <PrivateAction>
             <TeleportAction>
               <Position>
                 <WorldPosition x="-9.4" y="-152.8" z="0.5" h="1.57079632679"/>
@@ -72,7 +72,7 @@
               <AssignControllerAction>
                 <Controller name="HeroAgent">
                   <Properties>
-                    <Property name="module" value="npc_vehicle_control"/>
+                    <Property name="module" value="external_control"/>
                   </Properties>
                 </Controller>
               </AssignControllerAction>
@@ -86,22 +86,12 @@
               </OverrideControllerValueAction>
             </ControllerAction>
           </PrivateAction>
-		  <PrivateAction>
-			<LongitudinalAction>
-			    <SpeedAction>
-				  <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="time"/>
-				  <SpeedActionTarget>
-				    <AbsoluteTargetSpeed value="16.6667"/> <!-- 60km/h -->
-				  </SpeedActionTarget>
-				</SpeedAction>
-			</LongitudinalAction>
-		  </PrivateAction>
         </Private>
         <Private entityRef="adversary">
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="-13.2" y="-100.0" z="0.5" h="1.57079632679"/>
+                <WorldPosition x="-13.2" y="-70.0" z="0.5" h="1.57079632679"/>
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -110,7 +100,7 @@
 			  <SpeedAction>
 			    <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="time"/>
       			<SpeedActionTarget>
-			      <AbsoluteTargetSpeed value="13.8889"/> <!-- 50km/h -->
+			      <AbsoluteTargetSpeed value="6"/> 
 			   </SpeedActionTarget>
 			 </SpeedAction>
 			</LongitudinalAction>
@@ -146,44 +136,21 @@
                         <EntityRef entityRef="hero"/>
                       </TriggeringEntities>
                       <EntityCondition>
-                        <RelativeDistanceCondition entityRef="adversary" relativeDistanceType="cartesianDistance" value="33.3" freespace="false" rule="lessThan"/>
+                        <RelativeDistanceCondition entityRef="adversary" relativeDistanceType="cartesianDistance" value="50.0" freespace="false" rule="lessThan"/>
                       </EntityCondition>
                     </ByEntityCondition>
                   </Condition>
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-		    <Event name="AdversaryDecelerates" priority="overwrite">
-              <Action name="AdversaryDecelerates">
+		    <Event name="AdversaryAccelerates" priority="overwrite">
+              <Action name="AdversaryAccelerates">
                 <PrivateAction>
                   <LongitudinalAction>
                     <SpeedAction>
-                      <SpeedActionDynamics dynamicsShape="linear" value="10" dynamicsDimension="time"/>
+                      <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="time"/>
                       <SpeedActionTarget>
-                        <AbsoluteTargetSpeed value="7"/> <!--50km/h-->
-                      </SpeedActionTarget>
-                    </SpeedAction>
-                  </LongitudinalAction>
-                </PrivateAction>
-              </Action>
-			  <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="EndCondition" delay="0" conditionEdge="rising">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="action" storyboardElementRef="AdversaryCutIn" state="completeState"/>
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-			</Event>
-			<Event name="AdversaryConstant" priority="overwrite">
-              <Action name="AdversaryConstant">
-                <PrivateAction>
-                  <LongitudinalAction>
-                    <SpeedAction>
-                      <SpeedActionDynamics dynamicsShape="linear" value="10" dynamicsDimension="time"/>
-                      <SpeedActionTarget>
-                        <AbsoluteTargetSpeed value="7"/> <!--50km/h-->
+                        <AbsoluteTargetSpeed value="13.8889"/> <!--50km/h-->
                       </SpeedActionTarget>
                     </SpeedAction>
                   </LongitudinalAction>
@@ -206,46 +173,6 @@
             </Event>
           </Maneuver>
         </ManeuverGroup>
-        <ManeuverGroup maximumExecutionCount="1" name="ManeuverSequence_2">
-          <Actors selectTriggeringEntities="false">
-		    <EntityRef entityRef="hero"/>
-		  </Actors>
-		  <Maneuver name="HeroLaneChnage">
-			<Event name="HeroCutOut" priority="overwrite">
-              <Action name="HeroCutOut">
-                <PrivateAction>
-                  <LateralAction>
-                    <LaneChangeAction>
-                     <LaneChangeActionDynamics dynamicsShape="linear" value="5" dynamicsDimension="distance"/>
-                      <LaneChangeTarget>
-                        <RelativeTargetLane entityRef="hero" value="-1"/> <!--양수면 왼, 음수면 오-->
-                      </LaneChangeTarget>
-                    </LaneChangeAction>
-                  </LateralAction>
-                </PrivateAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="CutOutCondition_1" delay="0" conditionEdge="rising">
-                    <ByEntityCondition>
-                      <TriggeringEntities triggeringEntitiesRule="any">
-                        <EntityRef entityRef="adversary"/>
-                      </TriggeringEntities>
-                      <EntityCondition>
-                        <RelativeDistanceCondition entityRef="hero" relativeDistanceType="cartesianDistance" value="15.0" freespace="false" rule="lessThan"/>
-                      </EntityCondition>
-                    </ByEntityCondition>
-                  </Condition>
-				  <Condition name="CutOutCondition_2" delay="0" conditionEdge="rising">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="action" storyboardElementRef="AdversaryCutIn" state="completeState"/>
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-		  </Maneuver>
-		</ManeuverGroup>
         <StartTrigger>
           <ConditionGroup>
             <!--<Condition name="OverallStartCondition" delay="0" conditionEdge="rising">
