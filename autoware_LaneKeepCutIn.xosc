@@ -72,7 +72,7 @@
               <AssignControllerAction>
                 <Controller name="HeroAgent">
                   <Properties>
-                    <Property name="module" value="external_control"/>
+                    <Property name="module" value="npc_vehicle_control"/>
                   </Properties>
                 </Controller>
               </AssignControllerAction>
@@ -98,8 +98,8 @@
 		  <PrivateAction>
 		    <LongitudinalAction>
 			  <SpeedAction>
-			    <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="time"/>
-      			<SpeedActionTarget>
+ 			  <SpeedActionDynamics dynamicsShape="linear" value="2" dynamicsDimension="time"/>
+         <SpeedActionTarget>
 			      <AbsoluteTargetSpeed value="6"/> 
 			   </SpeedActionTarget>
 			 </SpeedAction>
